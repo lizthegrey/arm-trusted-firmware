@@ -570,8 +570,8 @@ static int parse_spd(struct ddr_info *priv)
 
 			if (spd_idx != 0 && spd_checksum[0] !=
 			    spd_checksum[spd_idx]) {
-				ERROR("Not identical DIMMs.\n");
-				return -EINVAL;
+				debug("Failed to match checksum on DIMM %d.\n", spd_idx);
+				// return -EINVAL;
 			}
 			conf->dimm_in_use[j] = 1;
 			valid_mask |= 1 << addr_idx;
