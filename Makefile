@@ -1238,6 +1238,7 @@ $(eval $(call assert_booleans,\
 	PSA_CRYPTO	\
 	ENABLE_CONSOLE_GETC \
 	INIT_UNUSED_NS_EL2	\
+	DISABLE_S5 \
 )))
 
 # Numeric_Flags
@@ -1432,6 +1433,7 @@ $(eval $(call add_defines,\
 	PSA_CRYPTO	\
 	ENABLE_CONSOLE_GETC \
 	INIT_UNUSED_NS_EL2	\
+	DISABLE_S5 \
 )))
 
 ifeq (${SANITIZE_UB},trap)
