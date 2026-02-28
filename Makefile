@@ -402,6 +402,7 @@ TF_LDFLAGS		+=	$(TF_LDFLAGS_$(ARCH))
 else ifneq ($(findstring gcc,$(notdir $(LD))),)
 # Pass ld options with Wl or Xlinker switches
 TF_LDFLAGS		+=	-Wl,--fatal-warnings -O1
+TF_LDFLAGS		+=	-Wl,--no-warn-rwx-segments
 TF_LDFLAGS		+=	-Wl,--gc-sections
 ifeq ($(ENABLE_LTO),1)
 	ifeq (${ARCH},aarch64)
@@ -419,6 +420,7 @@ TF_LDFLAGS		+=	$(subst --,-Xlinker --,$(TF_LDFLAGS_$(ARCH)))
 # LD = gcc-ld (ld) or llvm-ld (ld.lld) or other
 else
 TF_LDFLAGS		+=	--fatal-warnings -O1
+TF_LDFLAGS		+=	--no-warn-rwx-segments
 TF_LDFLAGS		+=	--gc-sections
 # ld.lld doesn't recognize the errata flags,
 # therefore don't add those in that case

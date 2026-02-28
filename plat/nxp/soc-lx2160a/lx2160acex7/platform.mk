@@ -37,6 +37,11 @@ FSPI_ERASE_4K	:= 0
 WARM_BOOT	:=	no
 TRNG_SUPPORT            	:= 0
 
+ # I2C bus flushing (errata A-010650)
+ # CEX7 has PCA9547 mux on IIC1 at 0x77 with SPD on channels 0-3
+LX2160_FLUSH_IIC	:= 1
+LX2160_FLUSH_IIC_MUX	:= {1, 0x77, 0x0f}
+
  # Adding platform specific defines
 
 $(eval $(call add_define_val,BOARD,'"${BOARD}"'))

@@ -28,7 +28,6 @@ NXP_WDOG_RESTART	:= yes
 
  # for features enabled above.
 ifeq (${NXP_WDOG_RESTART}, yes)
-NXP_NV_SW_MAINT_LAST_EXEC_DATA := yes
 LS_EL3_INTERRUPT_HANDLER := yes
 $(eval $(call add_define, NXP_WDOG_RESTART))
 endif
@@ -177,6 +176,12 @@ BL2_SOURCES		+=	${DDR_CNTLR_SOURCES}\
 				${TBBR_SOURCES}\
 				${FUSE_SOURCES}
 
+
+ # I2C Bus Flushing (optional, errata A-010650)
+LX2160_FLUSH_IIC ?= ""
+LX2160_FLUSH_IIC_MUX ?= ""
+$(eval $(call add_define_val,CONFIG_LX2160_FLUSH_IIC,"$(LX2160_FLUSH_IIC)"))
+$(eval $(call add_define_val,CONFIG_LX2160_FLUSH_IIC_MUX,"$(LX2160_FLUSH_IIC_MUX)"))
 
  # Adding TFA setup files
 include ${PLAT_PATH}/common/setup/common.mk

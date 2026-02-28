@@ -549,6 +549,19 @@ static int parse_spd(struct ddr_info *priv)
 				continue;
 			}
 
+#ifdef DDR_DEBUG
+			/* dump SPD */
+			printf("RAW SPD:");
+			for (size_t k = 0; k < sizeof(struct ddr4_spd); k++) {
+				unsigned char byte = ((unsigned char *)&spd[spd_idx])[k];
+				if (!(k % 16))
+					printf("\n%02x", byte);
+				else
+					printf(" %02x", byte);
+			}
+			printf("\n");
+#endif
+
 			spd_checksum[spd_idx] =
 				(spd[spd_idx].crc[1] << 24) |
 				(spd[spd_idx].crc[0] << 16) |
@@ -570,8 +583,8 @@ static int parse_spd(struct ddr_info *priv)
 
 			if (spd_idx != 0 && spd_checksum[0] !=
 			    spd_checksum[spd_idx]) {
-				debug("Failed to match checksum on DIMM %d.\n", spd_idx);
-				// return -EINVAL;
+				ERROR("SPD different between DIMMs, using first DIMM timings for all slots.\n");
+				ERROR("Timings might be wrong, replace or carefully validate your memory!\n");
 			}
 			conf->dimm_in_use[j] = 1;
 			valid_mask |= 1 << addr_idx;
@@ -614,6 +627,45 @@ static int parse_spd(struct ddr_info *priv)
 	}
 	/* now we have valid and identical DIMMs on controllers */
 #endif	/* CONFIG_DDR_NODIMM */
+
+	debug("DIMM: n_ranks = %u\n", dimm->n_ranks);
+	debug("DIMM: die_density = %u\n", dimm->die_density);
+	debug("DIMM: rank_density = %llu\n", dimm->rank_density);
+	debug("DIMM: capacity = %llu\n", dimm->capacity);
+	debug("DIMM: primary_sdram_width = %u\n", dimm->primary_sdram_width);
+	debug("DIMM: ec_sdram_width = %u\n", dimm->ec_sdram_width);
+	debug("DIMM: rdimm = %u\n", dimm->rdimm);
+	debug("DIMM: package_3ds = %u\n", dimm->package_3ds);
+	debug("DIMM: device_width = %u\n", dimm->device_width);
+	debug("DIMM: rc = %u\n", dimm->rc);
+	debug("DIMM: n_row_addr = %u\n", dimm->n_row_addr);
+	debug("DIMM: n_col_addr = %u\n", dimm->n_col_addr);
+	debug("DIMM: edc_config = %u\n", dimm->edc_config);
+	debug("DIMM: bank_addr_bits = %u\n", dimm->bank_addr_bits);
+	debug("DIMM: bank_group_bits = %u\n", dimm->bank_group_bits);
+	debug("DIMM: burst_lengths_bitmask = %u\n", dimm->burst_lengths_bitmask);
+	debug("DIMM: mirrored_dimm = %u\n", dimm->mirrored_dimm);
+	debug("DIMM: mtb_ps = %d\n", dimm->mtb_ps);
+	debug("DIMM: ftb_10th_ps = %d\n", dimm->ftb_10th_ps);
+	debug("DIMM: taa_ps = %d\n", dimm->taa_ps);
+	debug("DIMM: tfaw_ps = %d\n", dimm->tfaw_ps);
+	debug("DIMM: tckmin_x_ps = %d\n", dimm->tckmin_x_ps);
+	debug("DIMM: tckmax_ps = %d\n", dimm->tckmax_ps);
+	debug("DIMM: caslat_x = %u\n", dimm->caslat_x);
+	debug("DIMM: trcd_ps = %d\n", dimm->trcd_ps);
+	debug("DIMM: trp_ps = %d\n", dimm->trp_ps);
+	debug("DIMM: tras_ps = %d\n", dimm->tras_ps);
+	debug("DIMM: trfc1_ps = %d\n", dimm->trfc1_ps);
+	debug("DIMM: trfc2_ps = %d\n", dimm->trfc2_ps);
+	debug("DIMM: trfc4_ps = %d\n", dimm->trfc4_ps);
+	debug("DIMM: trrds_ps = %d\n", dimm->trrds_ps);
+	debug("DIMM: trrdl_ps = %d\n", dimm->trrdl_ps);
+	debug("DIMM: tccdl_ps = %d\n", dimm->tccdl_ps);
+	debug("DIMM: trfc_slr_ps = %d\n", dimm->trfc_slr_ps);
+	debug("DIMM: trc_ps = %d\n", dimm->trc_ps);
+	debug("DIMM: twr_ps = %d\n", dimm->twr_ps);
+	debug("DIMM: refresh_rate_ps = %u\n", dimm->refresh_rate_ps);
+	debug("DIMM: extended_op_srt = %u\n", dimm->extended_op_srt);
 
 	debug("cal cs\n");
 	conf->cs_in_use = 0;
